@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "a7223282-a7f8-4539-bbf6-aaac1dbb6cb2",
+		"name": "[6] Variables",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28412091",
+		"_collection_link": "https://telecom-api.postman.co/workspace/APIs~5c2ee624-bca3-4991-b58d-2b6aa6009d93/collection/28412091-a7223282-a7f8-4539-bbf6-aaac1dbb6cb2?action=share&source=collection_link&creator=28412091"
+	},
+	"item": [
+		{
+			"name": "Test Suite #7 Variables",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "[1] Loguin usuario - Crear Token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"// Fixed syntax and property name\r",
+											"pm.test(\"Captura el token y lo guarda en la variable de colección 'tokenProduct'\", function () {\r",
+											"    var responseData = pm.response.json();\r",
+											"    pm.collectionVariables.set(\"tokenProduct\", responseData.access_token);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableCookies": false,
+								"tlsPreferServerCiphers": true,
+								"disableUrlEncoding": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URLBase}}/login",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[2] Ger Perfil Usuario",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"var template = `\r",
+											"<style type=\"text/css\">\r",
+											"    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+											"    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+											"    .tftable tr {background-color:#ffffff;}\r",
+											"    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+											"    .tftable tr:hover {background-color:#e0ffff;}\r",
+											"</style>\r",
+											"\r",
+											"<table class=\"tftable\" border=\"1\">\r",
+											"    <tr>\r",
+											"        <th>Property</th>\r",
+											"        <th>Value</th>\r",
+											"    </tr>\r",
+											"    \r",
+											"    <tr>\r",
+											"        <td>No data available</td>\r",
+											"        <td>No data available</td>\r",
+											"    </tr>\r",
+											"</table>\r",
+											"`;\r",
+											"\r",
+											"function constructVisualizerPayload() {\r",
+											"    return {response: pm.response.json()}\r",
+											"}\r",
+											"\r",
+											"pm.visualizer.set(template, constructVisualizerPayload());"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenUser}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URLBase}}/profile",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "[1] Buscar todos los productos",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"pm.test(\"Valid WWW-Authenticate header is present\", function() {\r",
+											"    pm.expect(pm.response.headers.has('WWW-Authenticate')).to.be.true;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Credentials are being handled correctly\", function() {\r",
+											"    pm.expect(pm.response.json().message).to.include(\"Unauthorized\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenProduct}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URLBase}}/products",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[2] Crear un nuevo producto",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"var idproduct = pm.response.json().product.id;\r",
+											"\r",
+											"pm.collectionVariables.set(\"idproduct\", idproduct);\r",
+											"\r",
+											"console.info(idproduct);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenProduct}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \r\n    \"products_name\": \"{{$randomProduct}}\", // variables locales\r\n    \"products_status\": \"Available\",\r\n    \"products_model\": \"Iphone\",\r\n    \"products_url\": \"{{$randomUrl}}\",\r\n    \"products_quantity\": 52,\r\n    \"status\": 1,\r\n    \"products_price_ex_tax\": \"{{$randomPrice}}\",\r\n    \"products_tax_percentage\": \"145.00\",\r\n    \"products_rating\": \"4.50\",\r\n    \"products_description\": \"Hola Bienevenido a la API de Leonardo! espero te gusten mis trabajos!\",\r\n    \"products_brand_name\": \"{{$randomCompanyName}}\",\r\n    \"products_brand_id\": 2,\r\n    \"products_thumbnail\": null,\r\n    \"created_at\": null,\r\n    \"products_categories\":[\r\n        \"mobile\",\r\n        \"electronics\"\r\n    ],\r\n    \"products_attributes\":[\r\n        {\r\n         \"size\": \"small\",\r\n         \"color\": \"gray\",\r\n         \"height\": \"115cm\",\r\n         \"width\": \"45cm\"\r\n\r\n        }\r\n        ],\r\n\r\n    \"updated_at\": \"2024-09-23T00:43:54.000000Z\"\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URLBase}}/products",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"products"
+									]
+								},
+								"description": "Generated from cURL: curl -X 'POST' \\\r\n  'https://virtserver.swaggerhub.com/ExtraZamil/API/1.0.0/products' \\\r\n  -H 'accept: application/json' \\\r\n  -H 'Content-Type: application/json' \\\r\n  -d '{\r\n  \"products_name\": \"string\",\r\n  \"products_status\": \"string\",\r\n  \"products_model\": \"string\",\r\n  \"products_url\": \"string\",\r\n  \"products_quantity\": 0,\r\n  \"status\": 0,\r\n  \"products_price_ex_tax\": 0,\r\n  \"products_tax_percentage\": 0,\r\n  \"products_brand_name\": \"string\",\r\n  \"products_brand_id\": 0,\r\n  \"products_categories\": [\r\n    \"string\"\r\n  ],\r\n  \"products_attributes\": [\r\n    \"string\"\r\n  ],\r\n  \"products_thumbnail\": \"string\",\r\n  \"height\": 0,\r\n  \"width\": 0\r\n}'"
+							},
+							"response": []
+						},
+						{
+							"name": "[3] Buscar un producto por ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenProduct}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URLBase}}/products/{{idproduct}}",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"products",
+										"{{idproduct}}"
+									]
+								},
+								"description": "Generated from cURL: curl -X 'GET' \\\r\n  'https://virtserver.swaggerhub.com/ExtraZamil/API/1.0.0/products/12' \\\r\n  -H 'accept: application/json'"
+							},
+							"response": []
+						},
+						{
+							"name": "[4] Eliminar un producto por ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenProduct}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{URLBase}}/products/{{idproduct}}",
+									"host": [
+										"{{URLBase}}"
+									],
+									"path": [
+										"products",
+										"{{idproduct}}"
+									]
+								},
+								"description": "Generated from cURL: curl -X 'DELETE' \\\r\n  'https://virtserver.swaggerhub.com/ExtraZamil/API/1.0.0/products/1' \\\r\n  -H 'accept: application/json'"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
